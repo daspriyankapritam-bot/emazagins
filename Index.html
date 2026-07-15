@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technocrat | GPDKL E-Magazine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #e94560;
+            --accent-hover: #c73e54;
+            --text: #333;
+            --text-light: #666;
+            --text-lighter: #999;
+            --bg: #ffffff;
+            --bg-light: #f8f9fa;
+            --border: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 25px rgba(0,0,0,0.12);
+            --radius: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.3s ease;
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); color: var(--text); line-height: 1.6; background: var(--bg); }
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        .btn {
+            display: inline-block; padding: 12px 24px; border-radius: var(--radius);
+            font-weight: 500; font-size: 0.95rem; transition: var(--transition);
+            cursor: pointer; border: none;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-small { padding: 8px 16px; font-size: 0.85rem; }
+        .btn.disabled { opacity: 0.5; pointer-events: none; }
+
+        /* ===== SEARCH BAR ===== */
+        .search-bar-container {
+            background: var(--bg-light);
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .search-bar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .search-bar-wrapper input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+            transition: var(--transition);
+        }
+        .search-bar-wrapper input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.1);
+        }
+        .search-bar-wrapper button {
+            padding: 12px 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .search-bar-wrapper button:hover {
+            background: var(--accent-hover);
+        }
+        .search-results {
+            max-width: 600px;
+            margin: 10px auto 0;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-hover);
+            display: none;
+            overflow: hidden;
+        }
+        .search-results.active { display: block; }
+        .search-result-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .search-result-item:hover { background: var(--bg-light); }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item h4 { font-size: 0.95rem; color: var(--primary); margin-bottom: 4px; }
+        .search-result-item p { font-size: 0.85rem; color: var(--text-lighter); }
+
+        /* ===== WEBSITE PROFILE PHOTO ===== */
+        .profile-photo-section {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .profile-photo-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+        .profile-photo-btn:hover { transform: scale(1.1); }
+        .profile-photo-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-dropdown {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-hover);
+            padding: 16px;
+            min-width: 200px;
+            display: none;
+        }
+        .profile-dropdown.active { display: block; }
+        .profile-dropdown h4 { margin-bottom: 8px; font-size: 0.95rem; }
+        .profile-dropdown p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 12px; }
+        .profile-dropdown input[type="file"] {
+            display: none;
+        }
+        .profile-dropdown label {
+            display: block;
+            padding: 8px 12px;
+            background: var(--bg-light);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+        .profile-dropdown label:hover { background: var(--accent); color: white; }
+
+        /* Navigation */
+        .navbar {
+            background: var(--bg); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .navbar .container { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .logo { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a { font-weight: 500; font-size: 0.9rem; color: var(--text-light); transition: var(--transition); position: relative; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-links a.active::after { content: ''; position: absolute; bottom: -24px; left: 0; right: 0; height: 3px; background: var(--accent); }
+        .mobile-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px; }
+        .mobile-toggle span { display: block; width: 25px; height: 2px; background: var(--text); transition: var(--transition); }
+
+        /* ===== HEADER BOOK SECTIONS ===== */
+        .book-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 0 30px;
+        }
+        .book-header h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .book-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .book-nav-item {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .book-nav-item:hover, .book-nav-item.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Hero */
+        .hero { padding: 60px 0; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); }
+        .hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .category-tag {
+            display: inline-block; background: var(--accent); color: white;
+            padding: 6px 14px; border-radius: 20px; font-size: 0.8rem;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem;
+        }
+        .hero h1 { font-family: var(--font-heading); font-size: 2.8rem; line-height: 1.2; color: var(--primary); margin-bottom: 1.5rem; }
+        .hero-excerpt { font-size: 1.2rem; color: var(--text-light); margin-bottom: 1.5rem; line-height: 1.6; }
+        .meta { display: flex; gap: 1.5rem; color: var(--text-lighter); font-size: 0.9rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .hero-image { width: 100%; height: 400px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-hover); }
+        .hero-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ===== PHOTO SECTION WITH FONTS ===== */
+        .photo-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+        .photo-section h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary);
+        }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .photo-item {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .photo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        .photo-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 30px 16px 16px;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .photo-caption span {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* Latest Stories */
+        .latest-stories { padding: 80px 0; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .section-header h2 { font-family: var(--font-heading); font-size: 2rem; color: var(--primary); }
+        .view-all { color: var(--accent); font-weight: 500; transition: var(--transition); }
+        .view-all:hover { transform: translateX(5px); }
+        .stories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .story-card {
+            background: var(--bg); border-radius: var(--radius-lg); overflow: hidden;
+            box-shadow: var(--shadow); transition: var(--transition);
+        }
+        .story-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .story-card.featured { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; }
+        .card-image { height: 200px; overflow: hidden; }
+        .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .story-card:hover .card-image img { transform: scale(1.05); }
+        .story-card.featured .card-image { height: 100%; }
+        .card-content { padding: 24px; }
+        .card-content .category {
+            display: inline-block; color: var(--accent); font-size: 0.8rem;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;
+        }
+        .card-content h3 { font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 0.75rem; color: var(--primary); line-height: 1.3; }
+        .card-content p { color: var(--text-light); font-size: 0.95rem; margin-bottom: 1rem; }
+
+        /* ===== TECHNOCRAT PDF DOWNLOAD SECTION ===== */
+        .technocrat-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+        .technocrat-section h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .technocrat-section .subtitle {
+            text-align: center;
+            opacity: 0.9;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+        .pdf-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .pdf-card {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+        .pdf-card:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .pdf-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        .pdf-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .pdf-card p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .pdf-card .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: var(--accent);
+            color: white;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .pdf-card .btn-download:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Categories */
+        .categories-section { padding: 80px 0; background: var(--bg-light); }
+        .categories-section h2 { font-family: var(--font-heading); font-size: 2rem; color: var(--primary); text-align: center; margin-bottom: 50px; }
+        .categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .category-card {
+            background: var(--bg); padding: 40px 30px; border-radius: var(--radius-lg);
+            text-align: center; box-shadow: var(--shadow); transition: var(--transition);
+        }
+        .category-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .category-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .category-card h3 { font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--primary); }
+        .category-card p { color: var(--text-light); font-size: 0.9rem; }
+
+        /* Newsletter */
+        .newsletter { padding: 80px 0; background: var(--primary); color: white; text-align: center; }
+        .newsletter-content h2 { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 1rem; }
+        .newsletter-content p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem; }
+        .newsletter-form { display: flex; gap: 12px; max-width: 500px; margin: 0 auto; }
+        .newsletter-form input { flex: 1; padding: 14px 20px; border: none; border-radius: var(--radius); font-size: 1rem; }
+        .newsletter-form button { padding: 14px 28px; }
+
+        /* Footer */
+        .footer { background: var(--secondary); color: white; padding: 60px 0 30px; }
+        .footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; margin-bottom: 40px; }
+        .footer-brand h3 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1rem; }
+        .footer-brand p { opacity: 0.8; line-height: 1.6; }
+        .footer-links h4 { font-size: 1rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { opacity: 0.8; transition: var(--transition); }
+        .footer-links a:hover { opacity: 1; color: var(--accent); }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; text-align: center; opacity: 0.6; font-size: 0.9rem; }
+
+        /* Page Header */
+        .page-header { padding: 80px 0 60px; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); text-align: center; }
+        .page-header h1 { font-family: var(--font-heading); font-size: 3rem; color: var(--primary); margin-bottom: 1rem; }
+        .page-header p { font-size: 1.2rem; color: var(--text-light); max-width: 600px; margin: 0 auto; }
+
+        /* Article Page */
+        .article-page { padding: 60px 0; }
+        .article-header { max-width: 800px; margin: 0 auto 40px; text-align: center; }
+        .article-header h1 { font-family: var(--font-heading); font-size: 2.8rem; color: var(--primary); line-height: 1.2; margin-bottom: 1.5rem; }
+        .article-meta { display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap; }
+        .author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar {
+            width: 50px; height: 50px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 600; font-size: 1.1rem;
+        }
+        .author-avatar.large { width: 80px; height: 80px; font-size: 1.5rem; }
+        .author-info { text-align: left; }
+        .author-name { display: block; font-weight: 600; color: var(--primary); }
+        .author-title { font-size: 0.85rem; color: var(--text-lighter); }
+        .publish-info { display: flex; gap: 1.5rem; color: var(--text-lighter); font-size: 0.9rem; }
+        .article-featured-image {
+            width: 100%; height: 500px; border-radius: var(--radius-lg); margin-bottom: 50px;
+            overflow: hidden;
+        }
+        .article-featured-image img { width: 100%; height: 100%; object-fit: cover; }
+        .article-content { max-width: 700px; margin: 0 auto; }
+        .article-content p { margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.8; color: var(--text); }
+        .article-content .lead { font-size: 1.3rem; color: var(--text-light); font-weight: 300; line-height: 1.6; }
+        .article-content h2 { font-family: var(--font-heading); font-size: 1.8rem; color: var(--primary); margin: 2.5rem 0 1rem; }
+        .article-content blockquote {
+            border-left: 4px solid var(--accent); padding-left: 2rem; margin: 2rem 0;
+            font-style: italic; font-size: 1.2rem; color: var(--text-light);
+        }
+        .article-content blockquote cite { display: block; margin-top: 1rem; font-style: normal; font-weight: 600; color: var(--primary); font-size: 1rem; }
+        .article-tags { max-width: 700px; margin: 50px auto 0; padding-top: 30px; border-top: 1px solid var(--border); }
+        .article-tags span { font-weight: 600; margin-right: 1rem; }
+        .article-tags a {
+            display: inline-block; padding: 6px 14px; background: var(--bg-light);
+            border-radius: 20px; font-size: 0.85rem; margin-right: 0.5rem; margin-bottom: 0.5rem; transition: var(--transition);
+        }
+        .article-tags a:hover { background: var(--accent); color: white; }
+        .author-bio {
+            max-width: 700px; margin: 50px auto 0; padding: 30px; background: var(--bg-light);
+            border-radius: var(--radius-lg); display: flex; gap: 2rem; align-items: center;
+        }
+        .bio-content h3 { font-family: var(--font-heading); margin-bottom: 0.5rem; color: var(--primary); }
+        .bio-content p { color: var(--text-light); line-height: 1.6; }
+
+        /* Related Stories */
+        .related-stories { padding: 80px 0; background: var(--bg-light); }
+        .related-stories h2 { font-family: var(--font-heading); font-size: 2rem; margin-bottom: 40px; text-align: center; }
+
+        /* Category Content */
+        .category-content { padding: 60px 0; }
+        .stories-list { max-width: 900px; margin: 0 auto; }
+        .story-list-item { display: grid; grid-template-columns: 300px 1fr; gap: 30px; padding: 40px 0; border-bottom: 1px solid var(--border); }
+        .story-list-item:first-child { padding-top: 0; }
+        .list-image { height: 200px; border-radius: var(--radius); overflow: hidden; }
+        .list-image img { width: 100%; height: 100%; object-fit: cover; }
+        .list-content .category { color: var(--accent); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .list-content h2 { font-family: var(--font-heading); font-size: 1.5rem; margin: 0.5rem 0; line-height: 1.3; }
+        .list-content h2 a:hover { color: var(--accent); }
+        .list-content p { color: var(--text-light); margin-bottom: 1rem; line-height: 1.6; }
+
+        /* Pagination */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 2rem; margin-top: 60px; }
+        .page-numbers { display: flex; gap: 0.5rem; align-items: center; }
+        .page-numbers a {
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+            border-radius: var(--radius); font-weight: 500; transition: var(--transition);
+        }
+        .page-numbers a:hover, .page-numbers a.active { background: var(--accent); color: white; }
+
+        /* Archive */
+        .archive-section { padding: 60px 0; }
+        .archive-filters { display: flex; gap: 1rem; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-select, .search-input {
+            padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius);
+            font-size: 0.95rem; background: var(--bg);
+        }
+        .search-input { flex: 1; min-width: 250px; }
+        .archive-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .archive-issue {
+            background: var(--bg); border-radius: var(--radius-lg); overflow: hidden;
+            box-shadow: var(--shadow); transition: var(--transition); text-align: center; padding-bottom: 24px;
+        }
+        .archive-issue:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .issue-cover { height: 250px; overflow: hidden; margin-bottom: 1.5rem; }
+        .issue-cover img { width: 100%; height: 100%; object-fit: cover; }
+        .archive-issue h3 { font-family: var(--font-heading); margin-bottom: 0.5rem; padding: 0 20px; }
+        .archive-issue p { color: var(--text-light); margin-bottom: 1.5rem; }
+
+        /* About */
+        .about-content { padding: 60px 0; }
+        .about-story { max-width: 800px; margin: 0 auto 80px; text-align: center; }
+        .about-story h2 { font-family: var(--font-heading); font-size: 2rem; margin-bottom: 1.5rem; color: var(--primary); }
+        .about-story p { font-size: 1.1rem; line-height: 1.8; color: var(--text-light); margin-bottom: 1.5rem; }
+        .staff-section { margin-bottom: 80px; }
+        .staff-section h2 { font-family: var(--font-heading); font-size: 2rem; text-align: center; margin-bottom: 50px; color: var(--primary); }
+        .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .staff-card {
+            background: var(--bg-light); padding: 40px 30px; border-radius: var(--radius-lg);
+            text-align: center; transition: var(--transition);
+        }
+        .staff-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .staff-avatar {
+            width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 1.5rem;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 2rem; font-weight: 700;
+        }
+        .staff-card h3 { font-family: var(--font-heading); margin-bottom: 0.5rem; color: var(--primary); }
+        .staff-role { color: var(--accent); font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem; }
+        .staff-bio { color: var(--text-light); font-size: 0.95rem; line-height: 1.6; }
+        .join-section {
+            background: var(--primary); color: white; padding: 60px; border-radius: var(--radius-lg); text-align: center;
+        }
+        .join-section h2 { font-family: var(--font-heading); font-size: 2rem; margin-bottom: 1rem; }
+        .join-section p { opacity: 0.9; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        /* Page Sections - Hidden by default */
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        /* Reading Progress Bar */
+        #progress-bar {
+            position: fixed; top: 70px; left: 0; width: 0%; height: 3px;
+            background: var(--accent); z-index: 9999; transition: width 0.1s;
+        }
+
+        /* Campus Gallery */
+        .campus-gallery { padding: 60px 0; background: var(--bg-light); }
+        .campus-gallery h2 { font-family: var(--font-heading); font-size: 2rem; text-align: center; margin-bottom: 40px; color: var(--primary); }
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .gallery-item { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); }
+        .gallery-item:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .gallery-item img { width: 100%; height: 250px; object-fit: cover; }
+        .gallery-caption { padding: 15px; background: var(--bg); text-align: center; font-weight: 500; color: var(--text-light); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 2.5rem; }
+            .stories-grid { grid-template-columns: repeat(2, 1fr); }
+            .story-card.featured { grid-column: span 2; }
+            .categories-grid, .archive-grid, .staff-grid, .gallery-grid, .pdf-grid { grid-template-columns: repeat(2, 1fr); }
+            .photo-grid { grid-template-columns: repeat(2, 1fr); }
+            .book-nav { gap: 8px; }
+            .book-nav-item { padding: 8px 14px; font-size: 0.8rem; }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle { display: flex; }
+            .nav-links {
+                position: absolute; top: 70px; left: 0; right: 0; background: var(--bg);
+                flex-direction: column; padding: 20px; border-bottom: 1px solid var(--border);
+                transform: translateY(-150%); transition: var(--transition); gap: 1rem;
+            }
+            .nav-links.active { transform: translateY(0); }
+            .hero .container { grid-template-columns: 1fr; gap: 30px; }
+            .hero h1 { font-size: 2rem; }
+            .stories-grid { grid-template-columns: 1fr; }
+            .story-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+            .categories-grid, .archive-grid, .staff-grid, .gallery-grid, .pdf-grid { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; gap: 40px; }
+            .newsletter-form { flex-direction: column; }
+            .article-header h1 { font-size: 2rem; }
+            .article-featured-image { height: 300px; }
+            .story-list-item { grid-template-columns: 1fr; }
+            .author-bio { flex-direction: column; text-align: center; }
+            .join-section { padding: 40px 20px; }
+            .photo-grid { grid-template-columns: repeat(2, 1fr); }
+            .book-header h1 { font-size: 1.8rem; }
+            .technocrat-section h2 { font-size: 1.8rem; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.75rem; }
+            .page-header h1 { font-size: 2rem; }
+            .article-header h1 { font-size: 1.6rem; }
+            .photo-grid { grid-template-columns: 1fr; }
+            .book-nav-item { width: 100%; }
+        }
+
+        /* ===== PDF VIEWER MODAL ===== */
+        .pdf-modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .pdf-modal-overlay.active { display: flex; }
+        .pdf-modal-container {
+            background: var(--primary);
+            border-radius: var(--radius-lg);
+            width: 100%; max-width: 1000px;
+            height: 90vh;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .pdf-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: var(--secondary);
+        }
+        .pdf-modal-header h3 {
+            color: white;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+        }
+        .pdf-modal-close {
+            background: var(--accent); color: white; border: none;
+            width: 36px; height: 36px; border-radius: 50%;
+            font-size: 1.5rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+        .pdf-modal-close:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+        .pdf-modal-body { flex: 1; position: relative; background: #1a1a2e; }
+        .pdf-modal-body iframe {
+            width: 100%; height: 100%; border: none;
+        }
+        .pdf-modal-footer {
+            padding: 12px 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: var(--secondary);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .pdf-modal-footer a {
+            color: var(--accent); font-weight: 500; font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .pdf-modal-footer a:hover { color: white; }
+        .pdf-modal-footer span {
+            color: rgba(255,255,255,0.5); font-size: 0.85rem;
+        }
+        .gdrive-link {
+            display: block; margin-top: 10px;
+            color: rgba(255,255,255,0.8); font-size: 0.8rem;
+            text-decoration: underline; transition: var(--transition);
+        }
+        .gdrive-link:hover { color: white; }
+
+        /* Print Styles */
+        @media print {
+            .navbar, .newsletter, .footer, #print-btn, .related-stories, .archive-filters, .search-bar-container, .profile-photo-section, .book-header { display: none !important; }
+            .article-page { padding: 0; }
+            body { font-size: 12pt; line-height: 1.5; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <!-- Reading Progress Bar -->
+    <div id="progress-bar"></div>
+
+    <!-- ===== SEARCH BAR ===== -->
+    <div class="search-bar-container">
+        <div class="container">
+            <div class="search-bar-wrapper">
+                <input type="text" id="magazineSearch" placeholder="Search magazines, articles, events..." oninput="handleMagazineSearch(this)">
+                <button onclick="performSearch()">Search</button>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <div class="logo-icon">T</div>
+                Technocrat
+            </a>
+            <button class="mobile-toggle" aria-label="Toggle menu" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="active" onclick="showPage('home')">Home</a></li>
+                <li><a href="#" onclick="showPage('category', 'tech')">Tech</a></li>
+                
+                <li><a href="#" onclick="showPage('category', 'projects')">Projects</a></li>
+                <li><a href="#" onclick="showPage('category', 'career')">Career</a></li>
+                <li><a href="#" onclick="showPage('archive')">Archive</a></li>
+                <li><a href="#" onclick="showPage('about')">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== BOOK HEADER SECTIONS ===== -->
+    <div class="book-header">
+        <div class="container">
+            <h1>Technocrat Magazine Collection</h1>
+            <div class="book-nav">
+                <div class="book-nav-item active" onclick="filterByBook('all')">All Books</div>
+                <div class="book-nav-item" onclick="filterByBook('college')">College Book</div>
+                <div class="book-nav-item" onclick="filterByBook('faculty')">Faculty Book</div>
+                <div class="book-nav-item" onclick="filterByBook('3rd-year')">3rd Year Book</div>
+                <div class="book-nav-item" onclick="filterByBook('2nd-year')">2nd Year Book</div>
+                <div class="book-nav-item" onclick="filterByBook('bibartana')">Bibartana</div>
+                <div class="book-nav-item" onclick="filterByBook('technocrat')">Technocrat</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== HOME PAGE ==================== -->
+    <div id="page-home" class="page-section active">
+
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="category-tag">Featured Story</span>
+                    <h1>Welcome to Technocrat - GPDKL E-Magazine</h1>
+                    <p class="hero-excerpt">Your digital gateway to the latest in technology, coding, campus events, and student achievements from GPDKL.</p>
+                    <div class="meta">
+                        <span>By Editorial Team</span>
+                        <span>May 2026</span>
+                        <span>GPDKL</span>
+                    </div>
+                    <a href="#" class="btn btn-primary" onclick="showPage('article')">Read Full Story</a>
+                </div>
+                <div class="hero-image">
+                    <img src="https://i.postimg.cc/SKvQFsjx/Whats-App-Image-2026-05-17-at-1-11-52-AM.jpg" alt="GPDKL Campus">
+                    
+                </div>
+            </div>
+        </header>
+
+        <!-- Latest Stories -->
+        <section class="latest-stories">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Latest Stories</h2>
+                    <a href="#" class="view-all" onclick="showPage('category')">View All &rarr;</a>
+                </div>
+                <div class="stories-grid">
+                    <article class="story-card featured" data-book="college">
+                        <div class="card-image">
+                            <img src="https://i.postimg.cc/DZNFWyXx/2nd.png" alt="Campus Building">
+                        </div>
+                        <div class="card-content">
+                            <span class="category"></span>
+                            <h3>2nd year student</h3>
+                            <p>From its humble beginnings to becoming one of the most sought-after diploma programs in Odisha.</p>
+                            <div class="meta">
+                                <span>By Editorial Team</span>
+                                <span>May 2026</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="story-card" data-book="technocrat">
+                        <div class="card-image">
+                            <img src="https://i.postimg.cc/3NBwkH3B/Annotation-2026-05-18-144939.png" alt="Python Workshop">
+                        </div>
+                        <div class="card-content">
+                            <span class="category">Technocrat</span>
+                            <h3>Technocrat</h3>
+                            <div class="meta">
+                                <span>By Tech Team</span>
+                                <span>May 2026</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="story-card" data-book="bibartana">
+                        <div class="card-image">
+                            <img src="https://i.postimg.cc/wjkk9tK6/Annotation-2026-05-18-144832.png" alt="Hackathon">
+                        </div>
+                        <div class="card-content">
+                            <span class="category">Bibartana</span>
+                            <h3>Bibartana</h3>
+                            <div class="meta">
+                                <span>By Events Team</span>
+                                <span>April 2026</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="story-card" data-book="faculty">
+                        <div class="card-image">
+                            <img src="https://i.postimg.cc/8cs08pFY/006-(1).png" alt="AI and Machine Learning">
+                        </div>
+                        <div class="card-content">
+                            <span class="category">Faculty Book</span>
+                            <h3>Introduction to Artificial Intelligence for Diploma Students</h3>
+                            <div class="meta">
+                                <span>By Faculty Team</span>
+                                <span>April 2026</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="story-card" data-book="3rd-year">
+                        <div class="card-image">
+                            <img src="https://i.postimg.cc/d1PpgkGM/Annotation-2026-05-18-143640.png" alt="Campus Placement">
+                        </div>
+                        <div class="card-content">
+                            <span class="category">3rd Year Book</span>
+                            <h3>3rd year</h3>
+                            <div class="meta">
+                                <span>By Career Cell</span>
+                                <span>March 2026</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PHOTO SECTION WITH FONTS ===== -->
+          
+
+        <!-- ===== PHOTO SECTION WITH FONTS ===== -->
+        <section class="photo-section" id="photoSection">
+            <div class="container">
+                <h2>Photo Gallery</h2>
+                <div class="photo-grid">
+                    <div class="photo-item" data-book="college">
+                        <img src="https://i.postimg.cc/B6HPpyBz/Whats-App-Image-2026-05-17-at-1-11-52-AM-(1).jpg" alt="College Event">
+                        <div class="photo-caption">
+                            College Day Celebration
+                            <span>College Book &bull; May 2026</span>
+                        </div>
+                    </div>
+                    <div class="photo-item" data-book="faculty">
+                        <img src="https://i.postimg.cc/3wMK1wSq/Whats-App-Image-2026-05-17-at-1-11-51-AM.jpg" alt="Faculty Event">
+                        <div class="photo-caption">
+                            Faculty Seminar
+                            <span>Faculty Book &bull; April 2026</span>
+                        </div>
+                    </div>
+                    <div class="photo-item" data-book="3rd-year">
+                        <img src="https://i.postimg.cc/9MBcrzrf/new-organisation-image-Qf-MQfq-GZce718525886Tq02Ycp-BSt.png" alt="3rd Year Event">
+                        <div class="photo-caption">
+                            Final Year Project Expo
+                            <span>3rd Year Book &bull; March 2026</span>
+                        </div>
+                    </div>
+                    <div class="photo-item" data-book="2nd-year">
+                        <img src="https://i.postimg.cc/9MBcrzrf/new-organisation-image-Qf-MQfq-GZce718525886Tq02Ycp-BSt.png" alt="2nd Year Event">
+                        <div class="photo-caption">
+                            Sophomore Tech Fest
+                            <span>2nd Year Book &bull; February 2026</span>
+                        </div>
+                    </div>
+                    
+                    
+                   
+                </div>
+            </div>
+        </section>
+
+        <!-- Campus Gallery -->
+        <section class="campus-gallery">
+            <div class="container">
+                <h2>Our Campus</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="/mnt/agents/upload/IMG-20260330-WA0000.jpg" alt="I Love GPDKL Sign">
+                        <div class="gallery-caption">I Love GPDKL</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="/mnt/agents/upload/IMG-20260330-WA0002.jpg" alt="Main Building Front View">
+                        <div class="gallery-caption">Main Academic Block</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="/mnt/agents/upload/IMG-20260330-WA0001.jpg" alt="Campus Side View">
+                        <div class="gallery-caption">Department Building</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TECHNOCRAT PDF DOWNLOAD SECTION ===== -->
+        <section class="technocrat-section" id="technocratSection">
+            <div class="container">
+                <h2>Technocrat</h2>
+                <p class="subtitle">Download our magazine editions in PDF format</p>
+                <div class="pdf-grid">
+                    <div class="pdf-card" data-book="college">
+                        <div class="pdf-icon">&#127979;</div>
+                        <h3>College Book</h3>
+                        <p>Annual college magazine with all departments</p>
+                        <a href="#" class="btn-download" onclick="downloadPDF('college-book')">Download PDF</a>
+                    </div>
+                    <div class="pdf-card" data-book="faculty">
+                        <div class="pdf-icon">&#128104;&#8205;&#127979;</div>
+                        <h3>Faculty Book</h3>
+                        <p>Faculty contributions and research papers</p>
+                        <a href="#" class="btn-download" onclick="downloadPDF('faculty-book')">Download PDF</a>
+                    </div>
+                    <div class="pdf-card" data-book="3rd-year">
+                        <div class="pdf-icon">&#127891;</div>
+                        <h3>3rd Year Book</h3>
+                        <p>Final year student projects and achievements</p>
+                        <a href="#" class="btn-download" href="https://smallpdf.com/file#s=9fb6acce-00d4-43db-b526-17d519379782" target="_blank">Download PDF</a>
+                    </div>
+                    <div class="pdf-card" data-book="2nd-year">
+                        <div class="pdf-icon">&#128214;</div>
+                        <h3>2nd Year Book</h3>
+                        <p>Sophomore year highlights and activities</p>
+                        <a href="#" class="btn-download" href="https://smallpdf.com/file#s=63974dfb-7e94-41db-831a-9c9d7ed0c72b" target="_blank">Download PDF</a>
+                    </div>
+                    <div class="pdf-card" data-book="bibartana">
+                        <div class="pdf-icon">&#128240;</div>
+                        <h3>Bibartana</h3>
+                        <p>Cultural and literary magazine edition</p>
+                        <a href="#" class="btn-download" href="https://smallpdf.com/file#s=480a827e-c37d-413b-937d-3670069b4034" target="_blank">Download PDF</a>
+                    </div>
+                    <div class="pdf-card" data-book="technocrat">
+                        <div class="pdf-icon">&#128187;</div>
+                        <h3>Technocrat</h3>
+                        <p>Technical magazine for tech enthusiasts</p>
+                        <a href="https://drive.google.com/file/d/1zw6lY4-sTZ7NpRmmZVQsJ2HInmVzM_yM/view?usp=drivesdk" class="btn-download" onclick="openPdfModal(event)">View PDF</a>
+                        <a href="https://drive.google.com/file/d/1zw6lY4-sTZ7NpRmmZVQsJ2HInmVzM_yM/view?usp=drivesdk" target="_blank" class="gdrive-link">Open in Google Drive &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="categories-section">
+            <div class="container">
+                <h2>Browse by Category</h2>
+                <div class="categories-grid">
+                    <a href="#" class="category-card" onclick="showPage('category', 'tech')">
+                        <div class="category-icon">&#128187;</div>
+                        <h3>Technology</h3>
+                        <p>Latest tech trends and innovations</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showPage('category', 'coding')">
+                        <div class="category-icon">&#9000;&#65039;</div>
+                        <h3>Coding</h3>
+                        <p>Programming tutorials and tips</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showPage('category', 'events')">
+                        <div class="category-icon">&#127881;</div>
+                        <h3>Events</h3>
+                        <p>Tech fests, workshops, and seminars</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showPage('category', 'projects')">
+                        <div class="category-icon">&#128640;</div>
+                        <h3>Projects</h3>
+                        <p>Student projects and showcases</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showPage('category', 'career')">
+                        <div class="category-icon">&#128188;</div>
+                        <h3>Career</h3>
+                        <p>Placements and career guidance</p>
+                    </a>
+                    <a href="#" class="category-card" onclick="showPage('category', 'campus')">
+                        <div class="category-icon">&#127979;</div>
+                        <h3>Campus Life</h3>
+                        <p>Life at GPDKL</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section class="newsletter">
+            <div class="container">
+                <div class="newsletter-content">
+                    <h2>Stay Updated</h2>
+                    <p>Get the latest news, tech articles, and event updates delivered to your inbox.</p>
+                    <form class="newsletter-form" onsubmit="handleSubscribe(event)">
+                        <input type="email" placeholder="Enter your email" required>
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== ARTICLE PAGE ==================== -->
+    <div id="page-article" class="page-section">
+        <article class="article-page">
+            <div class="container">
+                <header class="article-header">
+                    <span class="category-tag">Campus</span>
+                    <h1>Welcome to Technocrat - GPDKL</h1>
+                    <div class="article-meta">
+                        <div class="author">
+                            <div class="author-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">ED</div>
+                            <div class="author-info">
+                                <span class="author-name">Editorial Team</span>
+                                <span class="author-title">Student Editor</span>
+                            </div>
+                        </div>
+                        <div class="publish-info">
+                            <span>May 2026</span>
+                            <span>5 min read</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="article-featured-image">
+                    <img src="/mnt/agents/upload/IMG-20260330-WA0000.jpg" alt="GPDKL">
+                </div>
+
+                <div class="article-content">
+                    <p class="lead">Welcome to the official Technocrat E-Magazine of GPDKL - a digital platform created by students, for students, to share knowledge, showcase talent, and celebrate the spirit of technology.</p>
+
+                    <p>GPDKL stands as one of the premier technical institutions in Odisha, nurturing future engineers and technologists. The department has been at the forefront of this mission, equipping students with the skills needed to thrive in the ever-evolving tech industry.</p>
+
+                    <h2>About Our Department</h2>
+                    <p>The department at GPDKL offers a comprehensive diploma program that covers fundamental and advanced topics. From programming languages like C, C++, Java, and Python to emerging technologies like Artificial Intelligence, Machine Learning, and Web Development - our curriculum is designed to make industry-ready professionals.</p>
+
+                    <p>Our state-of-the-art computer labs, experienced faculty, and hands-on project-based learning approach ensure that every student gets the practical exposure they need to succeed in their careers.</p>
+
+                    <blockquote>
+                        "Education is not the filling of a pail, but the lighting of a fire."
+                        <cite>- William Butler Yeats</cite>
+                    </blockquote>
+
+                    <h2>The Vision Behind Technocrat</h2>
+                    <p>This E-Magazine was conceptualized to create a vibrant digital community within our department. It serves as a platform where students can share their technical articles, project experiences, coding tutorials, and creative works. We believe that learning is most effective when knowledge is shared freely among peers.</p>
+
+                    <p>Through this magazine, we aim to document the journey of our department - the workshops we conduct, the hackathons we participate in, the projects we build, and the milestones we achieve together.</p>
+
+                    <h2>What You Will Find Here</h2>
+                    <p>Our E-Magazine covers a wide range of topics relevant to students and tech enthusiasts. From beginner-friendly coding tutorials to deep dives into complex algorithms, from campus event coverage to industry trend analysis - there is something for everyone.</p>
+
+                    <p>We also feature student projects, interview experiences, career guidance articles, and contributions from our alumni who are now working in top tech companies across India.</p>
+
+                    <h2>Join the Community</h2>
+                    <p>We invite all students to contribute to this magazine. Whether you want to write a technical article, share a project, or simply read and learn - this platform is yours. Together, let us build a culture of knowledge sharing and continuous learning at GPDKL.</p>
+                </div>
+
+                <div class="article-tags">
+                    <span>Tags:</span>
+                    <a href="#">GPDKL</a>
+                    <a href="#">E-Magazine</a>
+                    <a href="#">Technology</a>
+                    <a href="#">Technocrat</a>
+                </div>
+
+                <div class="author-bio">
+                    <div class="author-avatar large" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">ED</div>
+                    <div class="bio-content">
+                        <h3>About Editorial Team</h3>
+                        <p>The editorial team is a group of passionate students at GPDKL, dedicated to building a knowledge-sharing community among tech enthusiasts.</p>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <section class="related-stories">
+            <div class="container">
+                <h2>Related Stories</h2>
+                <div class="stories-grid">
+                    <article class="story-card">
+                        <div class="card-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            <span>Campus</span>
+                        </div>
+                        <div class="card-content">
+                            <span class="category">Campus</span>
+                            <h3>The Evolution of Our Department</h3>
+                            <div class="meta">
+                                <span>By Editorial Team</span>
+                                <span>May 2026</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="story-card">
+                        <div class="card-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            <span>Python</span>
+                        </div>
+                        <div class="card-content">
+                            <span class="category">Coding</span>
+                            <h3>Python Workshop 2026 Highlights</h3>
+                            <div class="meta">
+                                <span>By Tech Team</span>
+                                <span>May 2026</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="story-card">
+                        <div class="card-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            <span>AI</span>
+                        </div>
+                        <div class="card-content">
+                            <span class="category">Tech</span>
+                            <h3>Introduction to AI for Diploma Students</h3>
+                            <div class="meta">
+                                <span>By Editorial Team</span>
+                                <span>April 2026</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== CATEGORY PAGE ==================== -->
+    <div id="page-category" class="page-section">
+        <header class="page-header">
+            <div class="container">
+                <h1 id="category-title">Technology</h1>
+                <p>Explore the latest in tech, coding, and innovation from our department.</p>
+            </div>
+        </header>
+
+        <section class="category-content">
+            <div class="container">
+                <div class="stories-list">
+                    <article class="story-list-item">
+                        <div class="list-image">
+                            <img src="/mnt/agents/upload/IMG-20260330-WA0001.jpg" alt="Building">
+                        </div>
+                        <div class="list-content">
+                            <span class="category">Campus</span>
+                            <h2><a href="#" onclick="showPage('article')">Welcome to Technocrat - GPDKL</a></h2>
+                            <p>Your digital gateway to the latest in technology, coding, campus events, and student achievements.</p>
+                            <div class="meta">
+                                <span>By Editorial Team</span>
+                                <span>May 2026</span>
+                                <span>5 min read</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="story-list-item">
+                        <div class="list-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            <span>Python</span>
+                        </div>
+                        <div class="list-content">
+                            <span class="category">Coding</span>
+                            <h2><a href="#" onclick="showPage('article')">Python Workshop 2026: Building Real-World Projects</a></h2>
+                            <p>A comprehensive workshop covering Python fundamentals to advanced project development.</p>
+                            <div class="meta">
+                                <span>By Tech Team</span>
+                                <span>May 2026</span>
+                                <span>6 min read</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="story-list-item">
+                        <div class="list-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            <span>AI</span>
+                        </div>
+                        <div class="list-content">
+                            <span class="category">Tech</span>
+                            <h2><a href="#" onclick="showPage('article')">Introduction to Artificial Intelligence for Diploma Students</a></h2>
+                            <p>Understanding the basics of AI, machine learning, and their real-world applications.</p>
+                            <div class="meta">
+                                <span>By Editorial Team</span>
+                                <span>April 2026</span>
+                                <span>8 min read</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="story-list-item">
+                        <div class="list-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            <span>Web Dev</span>
+                        </div>
+                        <div class="list-content">
+                            <span class="category">Coding</span>
+                            <h2><a href="#" onclick="showPage('article')">Modern Web Development: From HTML to React</a></h2>
+                            <p>A journey through modern web technologies every student should know.</p>
+                            <div class="meta">
+                                <span>By Editorial Team</span>
+                                <span>April 2026</span>
+                                <span>10 min read</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="story-list-item">
+                        <div class="list-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            <span>Hackathon</span>
+                        </div>
+                        <div class="list-content">
+                            <span class="category">Events</span>
+                            <h2><a href="#" onclick="showPage('article')">Annual Tech Fest: Codeathon 2026 Highlights</a></h2>
+                            <p>Recap of the biggest coding competition held at our polytechnic this year.</p>
+                            <div class="meta">
+                                <span>By Events Team</span>
+                                <span>March 2026</span>
+                                <span>7 min read</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="pagination">
+                    <a href="#" class="btn btn-outline disabled">&larr; Previous</a>
+                    <span class="page-numbers">
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <span>...</span>
+                        <a href="#">8</a>
+                    </span>
+                    <a href="#" class="btn btn-outline">Next &rarr;</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== ARCHIVE PAGE ==================== -->
+    <div id="page-archive" class="page-section">
+        <header class="page-header">
+            <div class="container">
+                <h1>Archive</h1>
+                <p>Browse past issues and stories from Technocrat.</p>
+            </div>
+        </header>
+
+        <section class="archive-section">
+            <div class="container">
+                <div class="archive-filters">
+                    <select class="filter-select">
+                        <option>All Years</option>
+                        <option>2026</option>
+                        <option>2025</option>
+                        <option>2024</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Categories</option>
+                        <option>Tech</option>
+                        <option>Coding</option>
+                        <option>Events</option>
+                        <option>Projects</option>
+                        <option>Career</option>
+                    </select>
+                    <input type="text" class="search-input" placeholder="Search articles..." oninput="handleSearch(this)">
+                </div>
+
+                <div class="archive-grid" id="archiveGrid">
+                    <div class="archive-issue">
+                        <div class="issue-cover">
+                            <img src="/mnt/agents/upload/IMG-20260330-WA0000.jpg" alt="May 2026 Issue">
+                        </div>
+                        <h3>May 2026 Issue</h3>
+                        <p>8 articles</p>
+                        <a href="#" class="btn btn-small" onclick="showPage('category')">View Issue</a>
+                    </div>
+
+                    <div class="archive-issue">
+                        <div class="issue-cover">
+                            <img src="/mnt/agents/upload/IMG-20260330-WA0002.jpg" alt="April 2026 Issue">
+                        </div>
+                        <h3>April 2026 Issue</h3>
+                        <p>10 articles</p>
+                        <a href="#" class="btn btn-small" onclick="showPage('category')">View Issue</a>
+                    </div>
+
+                    <div class="archive-issue">
+                        <div class="issue-cover" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem;">
+                            <span>Mar 2026</span>
+                        </div>
+                        <h3>March 2026 Issue</h3>
+                        <p>6 articles</p>
+                        <a href="#" class="btn btn-small" onclick="showPage('category')">View Issue</a>
+                    </div>
+
+                    <div class="archive-issue">
+                        <div class="issue-cover" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem;">
+                            <span>Feb 2026</span>
+                        </div>
+                        <h3>February 2026 Issue</h3>
+                        <p>9 articles</p>
+                        <a href="#" class="btn btn-small" onclick="showPage('category')">View Issue</a>
+                    </div>
+
+                    <div class="archive-issue">
+                        <div class="issue-cover" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem;">
+                            <span>Jan 2026</span>
+                        </div>
+                        <h3>January 2026 Issue</h3>
+                        <p>7 articles</p>
+                        <a href="#" class="btn btn-small" onclick="showPage('category')">View Issue</a>
+                    </div>
+
+                    <div class="archive-issue">
+                        <div class="issue-cover" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem;">
+                            <span>Dec 2025</span>
+                        </div>
+                        <h3>December 2025 Issue</h3>
+                        <p>5 articles</p>
+                        <a href="#" class="btn btn-small" onclick="showPage('category')">View Issue</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== ABOUT PAGE ==================== -->
+    <div id="page-about" class="page-section">
+        <header class="page-header">
+            <div class="container">
+                <h1>About Technocrat</h1>
+                <p>The voice of the student community at GPDKL.</p>
+            </div>
+        </header>
+
+        <section class="about-content">
+            <div class="container">
+                <div class="about-story">
+                    <h2>Our Story</h2>
+                    <p>Technocrat was founded by passionate students at GPDKL. What started as a simple idea to document and share knowledge within our department has grown into a vibrant digital platform for all students.</p>
+                    <p>We are entirely student-driven, from our editorial team to our contributors. Our mission is to create a culture of knowledge sharing, technical excellence, and creative expression among the students of GPDKL.</p>
+                    <p>Every article we publish is crafted with care, written by students who are passionate about technology and eager to help their peers learn and grow.</p>
+                </div>
+
+                <div class="staff-section">
+                    <h2>Editorial Team</h2>
+                    <div class="staff-grid">
+                        <div class="staff-card">
+                            <div class="staff-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">ED</div>
+                            <h3>Editorial Team</h3>
+                            <p class="staff-role">Founder & Editor-in-Chief</p>
+                            <p class="staff-bio">Passionate students dedicated to building a knowledge-sharing community.</p>
+                        </div>
+
+                        <div class="staff-card">
+                            <div class="staff-avatar" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">TW</div>
+                            <h3>Tech Writers</h3>
+                            <p class="staff-role">Contributing Writers</p>
+                            <p class="staff-bio">A dedicated team of students contributing articles, tutorials, and technical content.</p>
+                        </div>
+
+                        <div class="staff-card">
+                            <div class="staff-avatar" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">ET</div>
+                            <h3>Events Team</h3>
+                            <p class="staff-role">Event Coverage</p>
+                            <p class="staff-bio">Students who cover workshops, hackathons, seminars, and all campus tech events.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="join-section">
+                    <h2>Contribute to Technocrat</h2>
+                    <p>We are always looking for passionate writers, coders, and tech enthusiasts to contribute. Share your knowledge, showcase your projects, and help build our community.</p>
+                    <a href="#" class="btn btn-primary">Submit Article</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Technocrat</h3>
+                    <p>The voice of the student community at GPDKL.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Sections</h4>
+                    <ul>
+                        <li><a href="#" onclick="showPage('category', 'tech')">Technology</a></li>
+                        <li><a href="#" onclick="showPage('category', 'coding')">Coding</a></li>
+                        <li><a href="#" onclick="showPage('category', 'events')">Events</a></li>
+                        <li><a href="#" onclick="showPage('category', 'projects')">Projects</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Information</h4>
+                    <ul>
+                        <li><a href="#" onclick="showPage('about')">About Us</a></li>
+                        <li><a href="#" onclick="showPage('archive')">Archive</a></li>
+                        <li><a href="#">Submit a Story</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; Technocrat, GPDKL. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== WEBSITE PROFILE PHOTO FLOATING BUTTON ===== -->
+    <div class="profile-photo-section">
+        <div class="profile-dropdown" id="profileDropdown">
+            <h4>Your Profile</h4>
+            <p>Upload a photo to personalize your experience</p>
+            <input type="file" id="profilePhotoInput" accept="image/*" onchange="handleProfilePhotoUpload(this)">
+            <label for="profilePhotoInput">Choose Photo</label>
+        </div>
+        <button class="profile-photo-btn" id="profilePhotoBtn" onclick="toggleProfileDropdown()">
+            <span id="profileIcon">&#128100;</span>
+        </button>
+    </div>
+
+    <script>
+        // ===== MAGAZINE SEARCH =====
+        const magazineData = [
+            { title: "College Day Celebration", category: "College Book", date: "May 2026" },
+            { title: "Python Workshop 2026", category: "Technocrat", date: "May 2026" },
+            { title: "Annual Tech Fest Codeathon", category: "Bibartana", date: "April 2026" },
+            { title: "Introduction to AI", category: "Faculty Book", date: "April 2026" },
+            { title: "Campus Placement Drive 2026", category: "3rd Year Book", date: "March 2026" },
+            { title: "Web Development Workshop", category: "Technocrat", date: "October 2025" },
+            { title: "Bibartana Cultural Night", category: "Bibartana", date: "January 2026" },
+            { title: "Sophomore Tech Fest", category: "2nd Year Book", date: "February 2026" },
+            { title: "Faculty Seminar", category: "Faculty Book", date: "April 2026" },
+            { title: "Final Year Project Expo", category: "3rd Year Book", date: "March 2026" }
+        ];
+
+        function handleMagazineSearch(input) {
+            const query = input.value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('searchResults');
+
+            if (query.length === 0) {
+                resultsContainer.classList.remove('active');
+                return;
+            }
+
+            const filtered = magazineData.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.category.toLowerCase().includes(query)
+            );
+
+            if (filtered.length > 0) {
+                resultsContainer.innerHTML = filtered.map(item => `
+                    <div class="search-result-item" onclick="goToMagazine('${item.category}')">
+                        <h4>${item.title}</h4>
+                        <p>${item.category} &bull; ${item.date}</p>
+                    </div>
+                `).join('');
+                resultsContainer.classList.add('active');
+            } else {
+                resultsContainer.innerHTML = '<div class="search-result-item"><p>No results found</p></div>';
+                resultsContainer.classList.add('active');
+            }
+        }
+
+        function performSearch() {
+            const input = document.getElementById('magazineSearch');
+            handleMagazineSearch(input);
+        }
+
+        function goToMagazine(category) {
+            document.getElementById('searchResults').classList.remove('active');
+            document.getElementById('magazineSearch').value = '';
+            filterByBook(category.toLowerCase().replace(/\s+/g, '-'));
+        }
+
+        // ===== BOOK FILTER =====
+        function filterByBook(bookType) {
+            // Update active nav
+            document.querySelectorAll('.book-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter stories
+            const stories = document.querySelectorAll('.story-card');
+            stories.forEach(story => {
+                if (bookType === 'all' || story.dataset.book === bookType) {
+                    story.style.display = '';
+                } else {
+                    story.style.display = 'none';
+                }
+            });
+
+            // Filter photos
+            const photos = document.querySelectorAll('.photo-item');
+            photos.forEach(photo => {
+                if (bookType === 'all' || photo.dataset.book === bookType) {
+                    photo.style.display = '';
+                } else {
+                    photo.style.display = 'none';
+                }
+            });
+
+            // Filter PDF cards
+            const pdfs = document.querySelectorAll('.pdf-card');
+            pdfs.forEach(pdf => {
+                if (bookType === 'all' || pdf.dataset.book === bookType) {
+                    pdf.style.display = '';
+                } else {
+                    pdf.style.display = 'none';
+                }
+            });
+
+            // Scroll to content
+            document.getElementById('page-home').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ===== PDF DOWNLOAD =====
+        function downloadPDF(pdfName) {
+            alert('Downloading ' + pdfName.replace(/-/g, ' ') + '.pdf...\n(Connect actual PDF files to enable real downloads)');
+        }
+
+        // ===== PROFILE PHOTO =====
+        function toggleProfileDropdown() {
+            document.getElementById('profileDropdown').classList.toggle('active');
+        }
+
+        function handleProfilePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const btn = document.getElementById('profilePhotoBtn');
+                    btn.innerHTML = `<img src="${e.target.result}" alt="Profile">`;
+                    document.getElementById('profileDropdown').classList.remove('active');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const profileSection = document.querySelector('.profile-photo-section');
+            if (!profileSection.contains(e.target)) {
+                document.getElementById('profileDropdown').classList.remove('active');
+            }
+        });
+
+        // ===== EXISTING FUNCTIONS =====
+        function showPage(pageName, category) {
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            const targetPage = document.getElementById('page-' + pageName);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            window.scrollTo(0, 0);
+
+            if (pageName === 'category' && category) {
+                const categoryNames = {
+                    'tech': 'Technology',
+                    'coding': 'Coding',
+                    'events': 'Events',
+                    'projects': 'Projects',
+                    'career': 'Career',
+                    'campus': 'Campus Life'
+                };
+                const titleEl = document.getElementById('category-title');
+                if (titleEl) {
+                    titleEl.textContent = categoryNames[category] || 'Articles';
+                }
+            }
+
+            const navLinks = document.getElementById('navLinks');
+            if (navLinks) navLinks.classList.remove('active');
+        }
+
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const toggle = document.querySelector('.mobile-toggle');
+            navLinks.classList.toggle('active');
+            toggle.classList.toggle('active');
+
+            const spans = toggle.querySelectorAll('span');
+            if (toggle.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        }
+
+        function handleSubscribe(e) {
+            e.preventDefault();
+            const button = e.target.querySelector('button');
+            const originalText = button.textContent;
+            button.textContent = 'Subscribed!';
+            button.style.background = '#43e97b';
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '';
+                e.target.reset();
+            }, 3000);
+        }
+
+        function handleSearch(input) {
+            const query = input.value.toLowerCase();
+            const items = document.querySelectorAll('.archive-issue');
+            items.forEach(item => {
+                item.style.display = item.textContent.toLowerCase().includes(query) ? '' : 'none';
+            });
+        }
+
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+
+            const progressBar = document.getElementById('progress-bar');
+            const articleContent = document.querySelector('.article-content');
+            if (articleContent && document.getElementById('page-article').classList.contains('active')) {
+                const articleTop = articleContent.offsetTop;
+                const articleHeight = articleContent.offsetHeight;
+                const progress = ((currentScroll - articleTop + window.innerHeight) / (articleHeight + window.innerHeight)) * 100;
+                progressBar.style.width = Math.min(Math.max(progress, 0), 100) + '%';
+            } else {
+                progressBar.style.width = '0%';
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        function applyFadeIn() {
+            const cards = document.querySelectorAll('.story-card, .staff-card, .archive-issue, .gallery-item, .category-card, .photo-item, .pdf-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                fadeObserver.observe(card);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyFadeIn();
+            console.log('Technocrat E-Magazine loaded successfully!');
+        });
+
+        const originalShowPage = showPage;
+        showPage = function(pageName, category) {
+            originalShowPage(pageName, category);
+            setTimeout(applyFadeIn, 100);
+        };
+
+        // ===== PDF VIEWER MODAL =====
+        function openPdfModal(e) {
+            if (e) e.preventDefault();
+            const modal = document.getElementById('pdfModal');
+            const frame = document.getElementById('pdfViewerFrame');
+            frame.src = 'https://drive.google.com/file/d/1zw6lY4-sTZ7NpRmmZVQsJ2HInmVzM_yM/preview';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closePdfModal() {
+            const modal = document.getElementById('pdfModal');
+            const frame = document.getElementById('pdfViewerFrame');
+            frame.src = '';
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closePdfModal();
+        });
+        document.getElementById('pdfModal').addEventListener('click', function(e) {
+            if (e.target === this) closePdfModal();
+        });
+
+    </script>
+
+
+    <!-- ===== PDF VIEWER MODAL ===== -->
+    <div class="pdf-modal-overlay" id="pdfModal">
+        <div class="pdf-modal-container">
+            <div class="pdf-modal-header">
+                <h3>&#128187; Technocrat Magazine - PDF Viewer</h3>
+                <button class="pdf-modal-close" onclick="closePdfModal()" title="Close">&times;</button>
+            </div>
+            <div class="pdf-modal-body">
+                <iframe id="pdfViewerFrame" src="" allow="autoplay"></iframe>
+            </div>
+            <div class="pdf-modal-footer">
+                <a href="https://drive.google.com/file/d/1zw6lY4-sTZ7NpRmmZVQsJ2HInmVzM_yM/view?usp=drivesdk" target="_blank">Open in Google Drive &rarr;</a>
+                <span>Powered by Google Drive</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
